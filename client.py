@@ -26,10 +26,10 @@ except Exception as e:
     print(e)
 
 
-#   --> Function to receive a command, execute it and return it
+#   --> Function to receive a command, execute it and return the output
 def execute(command):
     x = ""
-    command = command.split()
+    command = command.split() #Split the command, bad solution
 
     if command[0] == "cd":
         try:
