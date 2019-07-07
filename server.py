@@ -9,14 +9,14 @@ import pdb
 
 
 #Server properties
-IP = '212.238.239.196' #    --> thanathos.hopto.org
-PORT = 9999
+IP = '' #    --> thanathos.hopto.org
+PORT = 6666
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 socket.bind((IP, PORT))
 socket.listen()
 
 
-#Socket list
+#keep track of all active sockets
 socketList = []
 
 

