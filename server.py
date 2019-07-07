@@ -47,7 +47,7 @@ def send():
 
 
 #Accept incomming socket connections on a thread
-def connect(x, p):
+def connect():
     global socket
     global socketList
     print("thread started")
@@ -66,7 +66,7 @@ def connect(x, p):
 
 def main():
 
-    threadSocket = threading.Thread(target=connect, args=(0, 1), daemon=True)
+    threadSocket = threading.Thread(target=connect, args=(), daemon=True)
     threadSocket.start()
 
 
