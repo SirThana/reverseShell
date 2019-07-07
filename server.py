@@ -9,9 +9,9 @@ import pdb
 
 
 #Server properties
-IP = '192.168.178.60'
-PORT = 7777
-socket = socket.socket()
+IP = '212.238.239.196' #    --> thanathos.hopto.org
+PORT = 9999
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 socket.bind((IP, PORT))
 socket.listen()
 
@@ -27,7 +27,7 @@ def recv(c):
         print(data)
     except:
         c.close()
-        print("Didn't get shit")
+        print("Didn't get anything")
         sys.exit()
 
 def send():
@@ -72,11 +72,5 @@ def main():
 
     while True:
         send()
-
-    """
-    while True:
-        for clientSocket in socketList:
-            send(clientSocket)
-    """
 
 main()
