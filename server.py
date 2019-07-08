@@ -9,7 +9,7 @@ import pdb
 
 
 #Server properties
-IP = '' #    --> thanathos.hopto.org
+IP = '' #    --> 
 PORT = 6666
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 socket.bind((IP, PORT))
