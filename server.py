@@ -2,14 +2,14 @@ import socket
 import pickle
 import threading
 import sys
-import pdb
+import time
 
 #TODO
-#   1. fix synchronization between recv & send state || Done!
+#   1. fix synchronization between recv & send state || Done
 
 
 #Server properties
-IP = '' #    --> 
+IP = '' #    --> thanathos.hopto.org
 PORT = 6666
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 socket.bind((IP, PORT))
@@ -19,9 +19,8 @@ socket.listen()
 #keep track of all active sockets
 socketList = []
 
-
+#   --> Try to receive data, if it fails, close the socket
 def recv(c):
-    global socketList
     try:
         data = pickle.loads(c.recv(4096))
         print(data)
@@ -30,27 +29,38 @@ def recv(c):
         print("Didn't get anything")
         sys.exit()
 
+
+#   --> Send function, checks if the length of the socketList is greater or equal
+#       to 1. gets input from a user and sends it off to the most recent connection
+#       in the socketList using the pickle module. Calls for a receive with said socket
 def send():
     
-    while True:
-        for socket in socketList:
+    if len(socketList) >= 1:
+        while True:
             try:
                 command = input(">> ")
-                command = str(command)
-                socket.send(pickle.dumps(command))
+                if command == "quit":
+
+                    for c in socketList:
+                        c.close()
+
+                    socket.close()
+                    time.sleep(10)
+                    sys.close()
+
+                socketList[-1].send(pickle.dumps(command))
 
             except Exception as e:
-                socket.close()
+                socketList[-1].close()
                 print(e)
 
-            recv(socket)
+            recv(socketList[-1])
 
 
-#Accept incomming socket connections on a thread
+#   --> Accept incomming socket connections on a thread
+#       Append the socket to the socketList
 def connect():
-    global socket
-    global socketList
-    print("thread started")
+    print("Listening for connections...")
     while True:
         try:
             c, a = socket.accept()
@@ -71,6 +81,6 @@ def main():
 
 
     while True:
-        send()
+        send() #Calls for a recv after sending
 
 main()
