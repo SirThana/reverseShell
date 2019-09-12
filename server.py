@@ -62,24 +62,26 @@ def send():
             time.sleep(3)
             sys.exit()
 
+        #If not quit, try to send the command to the clients
         try:
             
             for c in socketList:
                 c.send(pickle.dumps(command))
-            #socketList[-1].send(pickle.dumps(command))
-
-        except Exception as e:
-            #socketList[-1].close()
+        except OSError as e: #If the send fails, close all sockets in socketList
             print(e)
+            for c in socketList:
+                c.close()
             continue
 
-        #Call for the recv function for every socket in socketList
+        #If not quit, try to receive something from every client
         for c in socketList:
-            print(recv(c))
-
-
-#        recv(socketList[-1])
-
+            try:
+                print(recv(c))
+            except OSError as e:
+                for c in socketList:
+                    c.close()
+                print(e)
+                time.sleep(3)
 
 #   --> Accept incomming socket connections on a thread
 #       Append the socket to the socketList
@@ -90,7 +92,7 @@ def connect():
             c, a = serverSocket.accept()
             socketList.append(c)
 
-        except Exception as e:
+        except OSError as e:
             print(e)
 
 
